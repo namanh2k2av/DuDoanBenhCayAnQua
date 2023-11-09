@@ -5,7 +5,8 @@ from torchvision import transforms
 from PIL import Image
 from flask import Flask, request, render_template
 
-label_predict = ['Apple___Apple_scab',
+label_predict = [
+ 'Apple___Apple_scab',
  'Apple___Black_rot',
  'Apple___Cedar_apple_rust',
  'Apple___healthy',
@@ -54,7 +55,7 @@ num_classes = len(label_predict)
 model.fc = nn.Linear(model.fc.in_features, num_classes)
 model.to(device)
 
-model.load_state_dict(torch.load('C:\Project\DoAnChuyenNganh\model.pth', map_location=torch.device('cpu')))
+model.load_state_dict(torch.load('D:\DHCNHN\HK7\ĐỒ ÁN CHUYÊN NGÀNH\BTL\CT\DoAnChuyenNganh\model.pth', map_location=torch.device('cpu')))
 model.eval()
 
 # img = Image.open('TomatoEarlyBlight4.jpg')
