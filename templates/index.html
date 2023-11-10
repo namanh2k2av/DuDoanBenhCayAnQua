@@ -1,14 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Image Prediction</title>
+    <title>Chẩn đoán bệnh dựa trên lá cho cây ăn quả</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style type="text/tailwindcss"></style>
+
+
+    <script>
+        function chooseFile(fileInput){
+            if(fileInput.files !== null){
+                if(fileInput.files && fileInput.files[0]){
+                var reader = new FileReader();
+
+                reader.onload = function (e){
+                    $('#image').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(fileInput.files[0]);
+                }
+            } else{
+                img.src = ""
+            }
+        }
+    </script>
+
 </head>
 <body>
-    <h1>Image Prediction</h1>
-    <form method="POST" action="/predict" enctype="multipart/form-data">
-        <input type="file" name="file" accept="image/*" required>
-        <input type="submit" value="Predict">
-    </form>
-    <p>{{ message }}</p>
+    <div>
+        <h1 style="font-size: 30px;">Chẩn đoán bệnh dựa trên lá cho cây ăn quả</h1>
+        <br>
+        <p>Vui lòng chọn 1 ảnh chụp của lá cây để thực hiện chẩn đoán</p>
+        <br>
+        <form method="POST" action="/predict" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*" required id="imageFile" onchange="chooseFile(this)">
+            <input type="submit" value="Predict" class="px-2 py-1 rounded bg-neutral-100 text-black-600 border">
+        </form>
+
+        <p>Bệnh dự đoán: {{ message }}</p>
+        <p>
+            <img src="" alt="" id="image" width="200px" height="200px">
+        </p>
+    </div>
+
+    
+
+    <!-- <div class="flex items-center justify-center">
+        <div class="drag-area">
+            <h1 class="text-lg">Chẩn đoán bệnh dựa trên lá cho cây ăn quả</h1>
+            <p class="text-lg">Vui lòng chọn 1 ảnh chụp của lá cây để thực hiện chẩn đoán</p>
+
+            <header class="text-lg">Kéo và thả để tải file lên</header>
+            <span class="my-3">Hoặc</span>
+            <button class="px-2 py-1 rounded bg-neutral-100 text-black-600">Chọn file</button>
+            <input type="file" hidden name="" id="">
+            
+            <form method="POST" action="/predict" enctype="multipart/form-data">
+                <p>
+                    <br>
+                    <input type="submit" value="Chẩn đoán" class="px-2 py-1 rounded bg-neutral-100 text-black-600">
+                </p>
+            </form>
+        </div>   
+    </div> -->
+
+    <script src="script.js"></script>
 </body>
 </html>
