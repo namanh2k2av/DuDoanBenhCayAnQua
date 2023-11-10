@@ -38,6 +38,7 @@ def predict_image(image_path, model, device):
     xb = transforms.ToTensor()(img).unsqueeze(0).to(device)
     yb = model(xb)
     _, preds  = torch.max(yb, dim=1)
+    print(yb)
     return label_predict[preds[0].item()]
     
 device = 'cpu'
