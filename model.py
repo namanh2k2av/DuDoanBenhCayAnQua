@@ -3,12 +3,17 @@ import torchvision
 import torch.nn as nn
 from torchvision import transforms
 from PIL import Image
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, send_from_directory
+import os
+import random
 
-label_predict = [
+
+label_predict = ['Apple___Alternaria_leaf_spot',
  'Apple___Apple_scab',
  'Apple___Black_rot',
+ 'Apple___Brown_spot',
  'Apple___Cedar_apple_rust',
+ 'Apple___Gray_spot',
  'Apple___healthy',
  'Blueberry___healthy',
  'Cherry_(including_sour)___Powdery_mildew',
@@ -21,7 +26,9 @@ label_predict = [
  'Peach___Bacterial_spot',
  'Peach___healthy',
  'Raspberry___healthy',
+ 'Strawberry___Angular_leafspot',
  'Strawberry___Leaf_scorch',
+ 'Strawberry___Powdery_mildew_leaf',
  'Strawberry___healthy',
  'Tomato___Bacterial_spot',
  'Tomato___Early_blight',
@@ -39,6 +46,7 @@ def predict_image(image_path, model, device):
     xb = transforms.ToTensor()(img).unsqueeze(0).to(device)
     yb = model(xb)
     _, preds  = torch.max(yb, dim=1)
+    print(yb)
     return label_predict[preds[0].item()]
     
 device = 'cpu'
@@ -55,7 +63,7 @@ num_classes = len(label_predict)
 model.fc = nn.Linear(model.fc.in_features, num_classes)
 model.to(device)
 
-model.load_state_dict(torch.load('D:\DHCNHN\HK7\ĐỒ ÁN CHUYÊN NGÀNH\BTL\CT\DoAnChuyenNganh\model.pth', map_location=torch.device('cpu')))
+model.load_state_dict(torch.load('C:\Project\DoAnChuyenNganh\model.pth', map_location=torch.device('cpu')))
 model.eval()
 
 # img = Image.open('TomatoEarlyBlight4.jpg')
@@ -82,9 +90,24 @@ def predict():
 
     if file:
         filename = file.filename
-        file.save(filename)
-        predicted_class = predict_image(filename, model, device)
-        return render_template('./index.html', message='Predicted Class: {}'.format(predicted_class))
+        file_path = f'static/{filename}'
+        file.save(file_path)
+        predicted_class = predict_image(file_path, model, device)
+
+        # Lấy đường dẫn thư mục tương ứng với predicted_class
+        class_directory = os.path.join('static', predicted_class)
+
+        # Nếu thư mục tồn tại, thì lấy danh sách tất cả các tệp ảnh trong thư mục đó
+        if os.path.exists(class_directory):
+            images_in_class = [os.path.join(class_directory, img) for img in os.listdir(class_directory) if img.lower().endswith(('.png', '.jpg', '.jpeg'))]
+
+            # Nếu có ít nhất 3 ảnh, chọn ngẫu nhiên 3 ảnh
+            if len(images_in_class) >= 3:
+                similar_images = random.sample(images_in_class, 3)
+                return render_template('./index.html', message=predicted_class, selected_image_path=file_path, similar_images=similar_images)
+
+    return render_template('./index.html', message='Failed to predict or find similar images', selected_image_path=file_path)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

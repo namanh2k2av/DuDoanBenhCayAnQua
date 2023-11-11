@@ -1,70 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chẩn đoán bệnh dựa trên lá cho cây ăn quả</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+</head>
 
-    <style type="text/tailwindcss"></style>
+<body class="bg-gray-100 h-screen flex items-center justify-center">
 
+    <div class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
+        <h1 class="text-3xl font-semibold mb-4">Chẩn đoán bệnh dựa trên lá cho cây ăn quả</h1>
+        <p class="text-gray-600 mb-6">Vui lòng chọn 1 ảnh chụp của lá cây để thực hiện chẩn đoán</p>
+
+        <form method="POST" action="/predict" enctype="multipart/form-data" class="mb-6">
+            <input type="file" name="file" accept="image/*" required id="imageFile" onchange="chooseFile(this)"
+                class="border py-2 px-4 w-full rounded">
+            <input type="submit" value="Predict"
+                class="mt-2 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 cursor-pointer">
+        </form>
+        <div class="mb-4">
+            <img src="{{ selected_image_path }}" alt="" id="image" class="w-48 h-48 object-cover rounded">
+        </div>
+        <p class="text-lg font-semibold mb-2">Bệnh dự đoán: {{ message }}</p>
+        
+        <p class="text-lg font-semibold mb-2">Ảnh tương tự:</p>
+        <div class="flex">
+            {% for img_path in similar_images %}
+            <img src="{{ img_path }}" alt="" class="w-24 h-24 object-cover rounded mr-2">
+            {% endfor %}
+        </div>
+
+    </div>
 
     <script>
-        function chooseFile(fileInput){
-            if(fileInput.files !== null){
-                if(fileInput.files && fileInput.files[0]){
-                var reader = new FileReader();
+        var selectedImagePath = "";
 
-                reader.onload = function (e){
-                    $('#image').attr('src', e.target.result);
+        function chooseFile(fileInput) {
+            if (fileInput.files !== null) {
+                if (fileInput.files && fileInput.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#image').attr('src', e.target.result);
+                        selectedImagePath = e.target.result;
+                    }
+                    reader.readAsDataURL(fileInput.files[0]);
                 }
-                reader.readAsDataURL(fileInput.files[0]);
-                }
-            } else{
-                img.src = ""
+            } else {
+                $('#image').attr('src', selectedImagePath);
             }
         }
     </script>
 
-</head>
-<body>
-    <div>
-        <h1 style="font-size: 30px;">Chẩn đoán bệnh dựa trên lá cho cây ăn quả</h1>
-        <br>
-        <p>Vui lòng chọn 1 ảnh chụp của lá cây để thực hiện chẩn đoán</p>
-        <br>
-        <form method="POST" action="/predict" enctype="multipart/form-data">
-            <input type="file" name="file" accept="image/*" required id="imageFile" onchange="chooseFile(this)">
-            <input type="submit" value="Predict" class="px-2 py-1 rounded bg-neutral-100 text-black-600 border">
-        </form>
-
-        <p>Bệnh dự đoán: {{ message }}</p>
-        <p>
-            <img src="" alt="" id="image" width="200px" height="200px">
-        </p>
-    </div>
-
-    
-
-    <!-- <div class="flex items-center justify-center">
-        <div class="drag-area">
-            <h1 class="text-lg">Chẩn đoán bệnh dựa trên lá cho cây ăn quả</h1>
-            <p class="text-lg">Vui lòng chọn 1 ảnh chụp của lá cây để thực hiện chẩn đoán</p>
-
-            <header class="text-lg">Kéo và thả để tải file lên</header>
-            <span class="my-3">Hoặc</span>
-            <button class="px-2 py-1 rounded bg-neutral-100 text-black-600">Chọn file</button>
-            <input type="file" hidden name="" id="">
-            
-            <form method="POST" action="/predict" enctype="multipart/form-data">
-                <p>
-                    <br>
-                    <input type="submit" value="Chẩn đoán" class="px-2 py-1 rounded bg-neutral-100 text-black-600">
-                </p>
-            </form>
-        </div>   
-    </div> -->
-
-    <script src="script.js"></script>
 </body>
+
 </html>
