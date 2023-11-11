@@ -16,19 +16,22 @@
         <h1 class="text-3xl font-semibold mb-4">Chẩn đoán bệnh dựa trên lá cho cây ăn quả</h1>
         <p class="text-gray-600 mb-6">Vui lòng chọn 1 ảnh chụp của lá cây để thực hiện chẩn đoán</p>
 
-        <form method="POST" action="/predict" enctype="multipart/form-data" class="mb-6">
+        <form method="POST" action="/predict" enctype="multipart/form-data" class="mb-6" style="display: flex;
+        flex-wrap: wrap;
+        justify-content: center">
             <input type="file" name="file" accept="image/*" required id="imageFile" onchange="chooseFile(this)"
                 class="border py-2 px-4 w-full rounded">
             <input type="submit" value="Predict"
                 class="mt-2 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 cursor-pointer">
         </form>
-        <div class="mb-4">
+        <div class="mb-4" style="display: flex;
+        justify-content: center">
             <img src="{{ selected_image_path }}" alt="" id="image" class="w-48 h-48 object-cover rounded">
         </div>
         <p class="text-lg font-semibold mb-2">Bệnh dự đoán: {{ message }}</p>
         
         <p class="text-lg font-semibold mb-2">Ảnh tương tự:</p>
-        <div class="flex">
+        <div class="flex" style="justify-content:space-evenly">
             {% for img_path in similar_images %}
             <img src="{{ img_path }}" alt="" class="w-24 h-24 object-cover rounded mr-2">
             {% endfor %}
