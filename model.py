@@ -3,43 +3,45 @@ import torchvision
 import torch.nn as nn
 from torchvision import transforms
 from PIL import Image
-from flask import Flask, request, render_template, send_from_directory
+from flask import Flask, request, render_template
 import os
 import random
 
 
-label_predict = ['Apple___Alternaria_leaf_spot',
- 'Apple___Apple_scab',
- 'Apple___Black_rot',
- 'Apple___Brown_spot',
- 'Apple___Cedar_apple_rust',
- 'Apple___Gray_spot',
- 'Apple___healthy',
- 'Blueberry___healthy',
- 'Cherry_(including_sour)___Powdery_mildew',
- 'Cherry_(including_sour)___healthy',
- 'Grape___Black_rot',
- 'Grape___Esca_(Black_Measles)',
- 'Grape___Leaf_blight_(Isariopsis_Leaf_Spot)',
- 'Grape___healthy',
- 'Orange___Haunglongbing_(Citrus_greening)',
- 'Peach___Bacterial_spot',
- 'Peach___healthy',
- 'Raspberry___healthy',
- 'Strawberry___Angular_leafspot',
- 'Strawberry___Leaf_scorch',
- 'Strawberry___Powdery_mildew_leaf',
- 'Strawberry___healthy',
- 'Tomato___Bacterial_spot',
- 'Tomato___Early_blight',
- 'Tomato___Late_blight',
- 'Tomato___Leaf_Mold',
- 'Tomato___Septoria_leaf_spot',
- 'Tomato___Spider_mites Two-spotted_spider_mite',
- 'Tomato___Target_Spot',
- 'Tomato___Tomato_Yellow_Leaf_Curl_Virus',
- 'Tomato___Tomato_mosaic_virus',
- 'Tomato___healthy']
+label_predict = {
+    'Apple___Alternaria_leaf_spot' : 'Táo đốm lá Alternaria',
+    'Apple___Apple_scab' : 'Ghẻ táo',
+    'Apple___Black_rot' : 'Táo thối đen',
+    'Apple___Brown_spot' : 'Táo đốm nâu',
+    'Apple___Cedar_apple_rust' : 'Rỉ sét táo tuyết tùng',
+    'Apple___Gray_spot' : 'Táo đốm xám',
+    'Apple___healthy' : 'Táo khỏe mạnh',
+    'Blueberry___healthy' : 'Việt quất khỏe mạnh',
+    'Cherry_(including_sour)___Powdery_mildew' : 'Anh đào phấn trắng',
+    'Cherry_(including_sour)___healthy' : 'Anh đào khỏe mạnh',
+    'Grape___Black_rot' : 'Nho sưng đen',
+    'Grape___Esca_(Black_Measles)' : 'Nho sởi đen',
+    'Grape___Leaf_blight_(Isariopsis_Leaf_Spot)' : 'Nho mục đốm lá',
+    'Grape___healthy' : 'Nho khỏe mạnh',
+    'Orange___Haunglongbing_(Citrus_greening)' : 'Cam vàng lá gân xanh',
+    'Peach___Bacterial_spot' : 'Đào đốm vi khuẩn',
+    'Peach___healthy' : 'Đào khỏe mạnh',
+    'Raspberry___healthy' : 'Mâm xôi khỏe mạnh',
+    'Strawberry___Angular_leafspot' : 'Dâu tây đốm lá góc cạnh',
+    'Strawberry___Leaf_scorch' : 'Dâu tây cháy lá',
+    'Strawberry___Powdery_mildew_leaf' : 'Dâu tây lá phấn trắng',
+    'Strawberry___healthy' : 'Dâu tây khỏe mạnh',
+    'Tomato___Bacterial_spot' : 'Cà chua đốm vi khuẩn',
+    'Tomato___Early_blight' : 'Cà chua mốc sương sớm',
+    'Tomato___Late_blight' : 'Cà chua mốc sương',
+    'Tomato___Leaf_Mold' : 'Cà chua nấm mốc lá',
+    'Tomato___Septoria_leaf_spot' : 'Cà chua bệnh đốm lá Septoria',
+    'Tomato___Spider_mites Two-spotted_spider_mite' : 'Cà chua côn trùng bám lá (Mối hai chấm)',
+    'Tomato___Target_Spot' : 'Cà chua đốm mục tiêu',
+    'Tomato___Tomato_Yellow_Leaf_Curl_Virus' : 'Cà chua Virus gây bệnh vàng lá',
+    'Tomato___Tomato_mosaic_virus' : 'Cà chua Mosaic virus',
+    'Tomato___healthy' : 'Cà chua khỏe mạnh'
+ }
 
 def predict_image(image_path, model, device):
     img = Image.open(image_path)
@@ -47,7 +49,7 @@ def predict_image(image_path, model, device):
     yb = model(xb)
     _, preds  = torch.max(yb, dim=1)
     print(yb)
-    return label_predict[preds[0].item()]
+    return list(label_predict.keys())[preds[0].item()]
     
 device = 'cpu'
 # print(device)
@@ -104,7 +106,7 @@ def predict():
             # Nếu có ít nhất 3 ảnh, chọn ngẫu nhiên 3 ảnh
             if len(images_in_class) >= 3:
                 similar_images = random.sample(images_in_class, 3)
-                return render_template('./index.html', message=predicted_class, selected_image_path=file_path, similar_images=similar_images)
+                return render_template('./index.html', message=label_predict[predicted_class], selected_image_path=file_path, similar_images=similar_images)
 
     return render_template('./index.html', message='Failed to predict or find similar images', selected_image_path=file_path)
 
