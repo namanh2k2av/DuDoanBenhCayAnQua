@@ -4,7 +4,7 @@
 ```bash
 pip install -r requirements.txt
 ```
-## Chạy model.py
+## Chạy main.py
 ## Mở browser chạy 
 ```bash
 http://localhost:5000
