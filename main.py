@@ -46,10 +46,13 @@ label_predict = {
 def predict_image(image_path, model, device):
     img = Image.open(image_path)
     xb = transforms.ToTensor()(img).unsqueeze(0).to(device)
-    yb = model(xb)
-    _, preds  = torch.max(yb, dim=1)
-    print(yb)
-    return list(label_predict.keys())[preds[0].item()]
+    with torch.no_grad():
+        yb = model(xb)
+    probs = torch.nn.functional.softmax(yb[0], dim=0)
+    percent, preds = torch.max(probs, dim=0)
+    predicted_label = list(label_predict.keys())[preds.item()]
+    percent = percent * 100
+    return predicted_label, round(percent.item(),2)
     
 device = 'cpu'
 # print(device)
@@ -67,13 +70,6 @@ model.to(device)
 
 model.load_state_dict(torch.load('C:\Project\DoAnChuyenNganh\model.pth', map_location=torch.device('cpu')))
 model.eval()
-
-# img = Image.open('TomatoEarlyBlight4.jpg')
-
-# print( 'Predicted:', predict_image('C:\Project\DoAnChuyenNganh\PotatoHealthy1.JPG', model, device))
-# dummy_input = torch.zeros(1, 3, 256, 256)
-# torch.onnx.export(model, dummy_input, 'onnx_model.onnx', verbose=True)
-
 app = Flask(__name__)
 
 @app.route('/')
@@ -94,7 +90,7 @@ def predict():
         filename = file.filename
         file_path = f'static/{filename}'
         file.save(file_path)
-        predicted_class = predict_image(file_path, model, device)
+        predicted_class, percent = predict_image(file_path, model, device)
 
         # Lấy đường dẫn thư mục tương ứng với predicted_class
         class_directory = os.path.join('static', predicted_class)
@@ -106,7 +102,7 @@ def predict():
             # Nếu có ít nhất 3 ảnh, chọn ngẫu nhiên 3 ảnh
             if len(images_in_class) >= 3:
                 similar_images = random.sample(images_in_class, 3)
-                return render_template('./index.html', message=label_predict[predicted_class], selected_image_path=file_path, similar_images=similar_images)
+                return render_template('./index.html', message=label_predict[predicted_class],percent = percent, selected_image_path=file_path, similar_images=similar_images)
 
     return render_template('./index.html', message='Failed to predict or find similar images', selected_image_path=file_path)
 
