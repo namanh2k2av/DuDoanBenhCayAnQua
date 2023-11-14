@@ -68,13 +68,13 @@ num_classes = len(label_predict)
 model.fc = nn.Linear(model.fc.in_features, num_classes)
 model.to(device)
 
-model.load_state_dict(torch.load('C:\Project\DoAnChuyenNganh\model.pth', map_location=torch.device('cpu')))
+model.load_state_dict(torch.load('model\model.pth', map_location=torch.device('cpu')))
 model.eval()
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('./index.html')
+    return render_template('./index.html', percent=0.0)
 
 @app.route('/predict', methods=['POST'])
 def predict():
