@@ -2,6 +2,7 @@
 ## Sử dụng python 3.9
 ## Download thư viện
 ```bash
+cd DuDoanBenhCayAnQua
 pip install -r requirements.txt
 ```
 ## Chạy main.py
