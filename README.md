@@ -5,6 +5,13 @@
 cd DuDoanBenhCayAnQua
 pip install -r requirements.txt
 ```
+## Tải trọng số
+```bash
+cd models
+gdown --id '1Xz5ArgT1Qkoz361sX2ZZaNnREHM-cOuK'
+gdown --id '14un5A1k8FYiAshHvUwt7ReftH1enmgiL'
+cd ..
+```
 ## Chạy main.py
 ```bash
 python main.py
