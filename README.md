@@ -6,6 +6,9 @@ cd DuDoanBenhCayAnQua
 pip install -r requirements.txt
 ```
 ## Chạy main.py
+```bash
+python main.py
+```
 ## Mở browser chạy 
 ```bash
 http://localhost:5000
