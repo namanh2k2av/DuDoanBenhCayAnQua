@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chẩn đoán bệnh dựa trên lá cho cây ăn quả</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body class="bg-gray-100 h-screen flex items-center justify-center" style="">
+
+    <div class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg" style="max-width:50rem">
+        <h1 class="text-3xl font-semibold mb-4" style="text-align: center">Chẩn đoán bệnh dựa trên lá cho cây ăn quả</h1>
+        <p class="text-gray-600 mb-6">Vui lòng chọn 1 ảnh chụp của lá cây để thực hiện chẩn đoán</p>
+
+        <form method="POST" action="/predict" enctype="multipart/form-data" class="mb-6" style="display: flex;
+        flex-wrap: wrap;
+        justify-content: center">
+            <input type="file" name="file" accept="image/*" required id="imageFile" onchange="chooseFile(this)"
+                class="border py-2 px-4 w-full rounded">
+            <input type="submit" value="Dự đoán"
+                class="mt-2 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 cursor-pointer">
+        </form>
+        <div class="mb-4" style="display: flex;
+        justify-content: center">
+            <img src="{{ selected_image_path }}" alt="" id="image" class="w-48 h-48 object-cover rounded" style="width:15rem; height:15rem">
+        </div>
+        <p class="text-lg font-semibold mb-2" style="color: {% if percent < 70 %}red{% else %}green{% endif %}">Bệnh dự đoán: {{ message }}</p>
+        <p class="text-lg font-semibold mb-2" style="color: {% if percent < 70 %}red{% else %}green{% endif %}">Độ chính xác: {{percent}}%</p>
+        
+        <p class="text-lg font-semibold mb-2">Ảnh tương tự với bệnh dự đoán:</p>
+        <div class="flex" style="justify-content:space-evenly">
+            {% for img_path in similar_images %}
+            <img src="{{ img_path }}" alt="" class="w-24 h-24 object-cover rounded mr-2" style="width:12rem; height:12rem">
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <script>
+        var selectedImagePath = "";
+
+        function chooseFile(fileInput) {
+            if (fileInput.files !== null) {
+                if (fileInput.files && fileInput.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#image').attr('src', e.target.result);
+                        selectedImagePath = e.target.result;
+                    }
+                    reader.readAsDataURL(fileInput.files[0]);
+                }
+            } else {
+                $('#image').attr('src', selectedImagePath);
+            }
+        }
+    </script>
+
+</body>
+
+</html>
