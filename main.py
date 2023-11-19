@@ -35,9 +35,15 @@ label_predict = {
     'Tomato___Tomato_mosaic_virus' : 'Cà chua Mosaic virus',
     'Tomato___healthy' : 'Cà chua khỏe mạnh'
  }
-
+device = 'cpu'
+# print(device)
+preprocess = transforms.Compose([
+    transforms.Resize((256, 256)),
+    transforms.ToTensor(),
+])
 def predict_image(image_path, model, device):
     img = Image.open(image_path)
+    img = transforms.Resize((256, 256))(img)
     xb = transforms.ToTensor()(img).unsqueeze(0).to(device)
     with torch.no_grad():
         yb = model(xb)
@@ -47,22 +53,21 @@ def predict_image(image_path, model, device):
     percent = percent * 100
     return predicted_label, round(percent.item(),2)
     
-device = 'cpu'
-# print(device)
-preprocess = transforms.Compose([
-    transforms.Resize((256, 256)),
-    transforms.CenterCrop(224),
-    transforms.ToTensor(),
-    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-])
 
-model = torchvision.models.resnet50(pretrained=True)
 num_classes = len(label_predict)
-model.fc = nn.Linear(model.fc.in_features, num_classes)
-model.to(device)
 
-model.load_state_dict(torch.load('model\model.pth', map_location=torch.device('cpu')))
-model.eval()
+model1 = torchvision.models.resnet50(pretrained=True)
+model1.fc = nn.Linear(model1.fc.in_features, num_classes)
+model1.to(device)
+model1.load_state_dict(torch.load('model\model_resnet50.pth', map_location=torch.device('cpu')))
+model1.eval()
+
+model2 = torchvision.models.vgg16(pretrained=True)
+model2.classifier[6] = nn.Linear(model2.classifier[6].in_features, num_classes)
+model2.to(device)
+model2.load_state_dict(torch.load('model\model_vgg16.pth', map_location=torch.device('cpu')))
+model2.eval()
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -83,7 +88,15 @@ def predict():
         filename = file.filename
         file_path = f'static/{filename}'
         file.save(file_path)
-        predicted_class, percent = predict_image(file_path, model, device)
+        predicted_class1, percent1 = predict_image(file_path, model1, device)
+        predicted_class2, percent2 = predict_image(file_path, model2, device)
+        print(f'Resnet prediction: {predicted_class1} {percent1}')
+        print(f'Vgg prediction: {predicted_class2} {percent2}')
+        
+        if percent1 >= percent2:
+            predicted_class, percent = predicted_class1, percent1
+        else:
+            predicted_class, percent = predicted_class2, percent2
 
         # Lấy đường dẫn thư mục tương ứng với predicted_class
         class_directory = os.path.join('static', predicted_class)
