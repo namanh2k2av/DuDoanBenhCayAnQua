@@ -9,14 +9,10 @@ import random
 
 
 label_predict = {
-    'Apple___Alternaria_leaf_spot' : 'Táo đốm lá Alternaria',
     'Apple___Apple_scab' : 'Ghẻ táo',
     'Apple___Black_rot' : 'Táo thối đen',
-    'Apple___Brown_spot' : 'Táo đốm nâu',
     'Apple___Cedar_apple_rust' : 'Rỉ sét táo tuyết tùng',
-    'Apple___Gray_spot' : 'Táo đốm xám',
     'Apple___healthy' : 'Táo khỏe mạnh',
-    'Blueberry___healthy' : 'Việt quất khỏe mạnh',
     'Cherry_(including_sour)___Powdery_mildew' : 'Anh đào phấn trắng',
     'Cherry_(including_sour)___healthy' : 'Anh đào khỏe mạnh',
     'Grape___Black_rot' : 'Nho sưng đen',
@@ -26,10 +22,7 @@ label_predict = {
     'Orange___Haunglongbing_(Citrus_greening)' : 'Cam vàng lá gân xanh',
     'Peach___Bacterial_spot' : 'Đào đốm vi khuẩn',
     'Peach___healthy' : 'Đào khỏe mạnh',
-    'Raspberry___healthy' : 'Mâm xôi khỏe mạnh',
-    'Strawberry___Angular_leafspot' : 'Dâu tây đốm lá góc cạnh',
     'Strawberry___Leaf_scorch' : 'Dâu tây cháy lá',
-    'Strawberry___Powdery_mildew_leaf' : 'Dâu tây lá phấn trắng',
     'Strawberry___healthy' : 'Dâu tây khỏe mạnh',
     'Tomato___Bacterial_spot' : 'Cà chua đốm vi khuẩn',
     'Tomato___Early_blight' : 'Cà chua mốc sương sớm',
