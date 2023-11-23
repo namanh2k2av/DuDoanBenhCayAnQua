@@ -59,13 +59,13 @@ num_classes = len(label_predict)
 model1 = torchvision.models.resnet50(pretrained=True)
 model1.fc = nn.Linear(model1.fc.in_features, num_classes)
 model1.to(device)
-model1.load_state_dict(torch.load('model\model_resnet50.pth', map_location=torch.device('cpu')))
+model1.load_state_dict(torch.load('models\model_resnet50.pth', map_location=torch.device('cpu')))
 model1.eval()
 
 model2 = torchvision.models.vgg16(pretrained=True)
 model2.classifier[6] = nn.Linear(model2.classifier[6].in_features, num_classes)
 model2.to(device)
-model2.load_state_dict(torch.load('model\model_vgg16.pth', map_location=torch.device('cpu')))
+model2.load_state_dict(torch.load('models\model_vgg16.pth', map_location=torch.device('cpu')))
 model2.eval()
 
 app = Flask(__name__)
@@ -108,7 +108,15 @@ def predict():
             # Nếu có ít nhất 3 ảnh, chọn ngẫu nhiên 3 ảnh
             if len(images_in_class) >= 3:
                 similar_images = random.sample(images_in_class, 3)
-                return render_template('./index.html', message=label_predict[predicted_class],percent = percent, selected_image_path=file_path, similar_images=similar_images)
+                return render_template('./index.html',
+                                       message=label_predict[predicted_class],
+                                       percent = percent, selected_image_path=file_path,
+                                       similar_images=similar_images, 
+                                       predicted_class1=label_predict[predicted_class1],
+                                       predicted_class2=label_predict[predicted_class2],
+                                       percent1=percent1,
+                                       percent2=percent2,
+                                       )
 
     return render_template('./index.html', message='Failed to predict or find similar images', selected_image_path=file_path)
 
