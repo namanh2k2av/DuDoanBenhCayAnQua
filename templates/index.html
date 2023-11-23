@@ -28,8 +28,21 @@
         justify-content: center">
             <img src="{{ selected_image_path }}" alt="" id="image" class="w-48 h-48 object-cover rounded" style="width:15rem; height:15rem">
         </div>
-        <p class="text-lg font-semibold mb-2" style="color: {% if percent < 70 %}red{% else %}green{% endif %}">Bệnh dự đoán: {{ message }}</p>
-        <p class="text-lg font-semibold mb-2" style="color: {% if percent < 70 %}red{% else %}green{% endif %}">Độ chính xác: {{percent}}%</p>
+        <div style="display: flex;justify-content: space-around">
+            <div>
+                <p class="text-lg font-semibold mb-2">Mô hình Resnet50</p>
+                <p class="text-lg font-semibold mb-2">Bệnh dự đoán: {{ predicted_class1 }}</p>
+                <p class="text-lg font-semibold mb-2">Độ chính xác: {{percent1}}%</p>
+            </div>
+            <div>
+                <p class="text-lg font-semibold mb-2">Mô hình VGG16</p>
+                <p class="text-lg font-semibold mb-2">Bệnh dự đoán: {{ predicted_class2 }}</p>
+                <p class="text-lg font-semibold mb-2">Độ chính xác: {{percent2}}%</p>
+            </div>
+        </div>
+        <p class="text-lg font-semibold mb-2" style="text-align: center;color: {% if percent < 70 %}red{% else %}green{% endif %}">Kết quả</p>
+        <p class="text-lg font-semibold mb-2" style="text-align: center;color: {% if percent < 70 %}red{% else %}green{% endif %}">Bệnh dự đoán: {{ message }}</p>
+        <p class="text-lg font-semibold mb-2" style="text-align: center;color: {% if percent < 70 %}red{% else %}green{% endif %}">Độ chính xác: {{percent}}%</p>
         
         <p class="text-lg font-semibold mb-2">Ảnh tương tự với bệnh dự đoán:</p>
         <div class="flex" style="justify-content:space-evenly">
