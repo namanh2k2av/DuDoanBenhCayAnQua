@@ -56,13 +56,13 @@ def predict_image(image_path, model, device):
 
 num_classes = len(label_predict)
 
-model1 = torchvision.models.resnet50(pretrained=True)
+model1 = torchvision.models.resnet50()
 model1.fc = nn.Linear(model1.fc.in_features, num_classes)
 model1.to(device)
 model1.load_state_dict(torch.load('models\model_resnet50.pth', map_location=torch.device('cpu')))
 model1.eval()
 
-model2 = torchvision.models.vgg16(pretrained=True)
+model2 = torchvision.models.vgg16()
 model2.classifier[6] = nn.Linear(model2.classifier[6].in_features, num_classes)
 model2.to(device)
 model2.load_state_dict(torch.load('models\model_vgg16.pth', map_location=torch.device('cpu')))

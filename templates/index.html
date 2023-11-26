@@ -57,15 +57,20 @@
         var selectedImagePath = "";
 
         function chooseFile(fileInput) {
-            if (fileInput.files !== null) {
-                if (fileInput.files && fileInput.files[0]) {
+            if (fileInput.files !== null && fileInput.files.length > 0) {
+                var file = fileInput.files[0];
+       
+                if (file.type.startsWith('image/')) {
                     var reader = new FileReader();
 
                     reader.onload = function (e) {
                         $('#image').attr('src', e.target.result);
                         selectedImagePath = e.target.result;
                     }
-                    reader.readAsDataURL(fileInput.files[0]);
+                    reader.readAsDataURL(file);
+                } else {
+                    alert('Vui lòng chọn một tệp ảnh.');
+                    fileInput.value = null;
                 }
             } else {
                 $('#image').attr('src', selectedImagePath);

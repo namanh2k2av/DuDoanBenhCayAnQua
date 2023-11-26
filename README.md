@@ -20,3 +20,5 @@ python main.py
 ```bash
 http://localhost:5000
 ```
+## Demo
+<img src="img_test\demo.png" alt="image" style="zoom:50%;" />
