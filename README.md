@@ -21,4 +21,6 @@ python main.py
 http://localhost:5000
 ```
 ## Demo
-<img src="img_test\demo.png" alt="image" style="zoom:50%;text-align: center;" />
+<p align="center">
+  <img src="img_test\demo.png" alt="image" style="zoom:40%;"/>
+</p>
