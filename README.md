@@ -22,5 +22,5 @@ http://localhost:5000
 ```
 ## Demo
 <p align="center">
-  <img src="img_test\demo.png" alt="image" style="zoom:10%;"/>
+  <img src="img_test\demo.png" alt="image" width="300" height="200"/>
 </p>
